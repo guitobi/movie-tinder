@@ -1,10 +1,19 @@
-const UserNameInput = () => {
+import { X } from "lucide-react";
+
+interface UserNameInputProps {
+  onClose: () => void;
+}
+
+const UserNameInput: React.FC<UserNameInputProps> = ({ onClose }) => {
   return (
     <div className="inset-0 backdrop-blur-2xl fixed flex justify-center items-center">
       <div
         className="flex flex-col justify-center items-center absolute w-[75%] h-[65%] bg-slate-700 rounded-md
       "
       >
+        <div onClick={() => onClose()} className="absolute top-0 right-0 p-2">
+          <X color="white" />
+        </div>
         <label
           htmlFor="username"
           className="text-stone-300 font-semibold text-2xl mb-10"
