@@ -1,1 +1,75 @@
 @import "tailwindcss";
+
+@layer base {
+  body {
+    background: linear-gradient(
+      to bottom right,
+      rgb(2 6 23),
+      rgb(15 23 42),
+      rgb(88 28 135)
+    );
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .glow-effect {
+    box-shadow:
+      0 0 20px rgba(168, 85, 247, 0.4),
+      0 0 40px rgba(168, 85, 247, 0.2),
+      0 0 60px rgba(168, 85, 247, 0.1);
+  }
+
+  .glow-effect-pink {
+    box-shadow:
+      0 0 20px rgba(236, 72, 153, 0.4),
+      0 0 40px rgba(236, 72, 153, 0.2),
+      0 0 60px rgba(236, 72, 153, 0.1);
+  }
+
+  .movie-card {
+    background: linear-gradient(
+      to bottom right,
+      rgba(30, 41, 59, 0.8),
+      rgba(15, 23, 42, 0.8)
+    );
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 1rem;
+    transition: all 0.3s;
+  }
+
+  .movie-card:hover {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    transform: translateY(-4px);
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
