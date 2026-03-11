@@ -1,18 +1,41 @@
 import { X, User, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 interface UserNameInputProps {
   onClose: () => void;
 }
 
+const URL = "http://localhost:8000";
+
 const UserNameInput: React.FC<UserNameInputProps> = ({ onClose }) => {
   const [username, setUsername] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) {
       console.log("Username:", username);
       onClose();
+    }
+  };
+
+  const createRoom = async () => {
+    try {
+      const res = await fetch(`${URL}/api/rooms/create`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error("Error with creating room! Try again later");
+      const roomId: number = await res.json();
+      console.log(roomId);
+      if (roomId) navigate(`/rooms/${roomId}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(
+          "Error with creating room! Try again later",
+          error.message,
+        );
+      }
     }
   };
 
@@ -83,6 +106,7 @@ const UserNameInput: React.FC<UserNameInputProps> = ({ onClose }) => {
               Скасувати
             </button>
             <button
+              onClick={createRoom}
               type="submit"
               disabled={!username.trim()}
               className="flex-1 bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl px-4 sm:px-6 py-2.5 sm:py-3 transition-all duration-300 transform hover:scale-105 disabled:transform-none glow-effect-pink disabled:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"

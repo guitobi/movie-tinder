@@ -11,7 +11,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center gap-6 sm:gap-8 px-4 relative overflow-hidden">
-      {/* Декоративні елементи */}
       <div className="absolute top-10 sm:top-20 left-4 sm:left-20 text-purple-500/10 animate-float">
         <Film className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28" />
       </div>
@@ -28,9 +27,7 @@ const Home = () => {
         <Sparkles className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20" />
       </div>
 
-      {/* Основний контент */}
       <div className="relative z-10 flex flex-col items-center gap-6 sm:gap-8 max-w-2xl w-full">
-        {/* Логотип */}
         <div className="flex flex-col items-center gap-3 sm:gap-4 animate-float">
           <div className="flex items-center gap-3">
             <div className="p-2 sm:p-3 bg-linear-to-br from-purple-600 to-pink-600 rounded-xl sm:rounded-2xl glow-effect">
@@ -46,7 +43,6 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Фічі */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 w-full mb-4">
           <div className="movie-card p-4 sm:p-6 text-center group">
             <Users className="mx-auto mb-2 sm:mb-3 text-purple-400 group-hover:text-pink-400 transition-colors w-6 h-6 sm:w-8 sm:h-8" />
@@ -75,7 +71,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Кнопка */}
         <button
           onClick={onOpenModal}
           className="group relative bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl sm:rounded-2xl px-6 sm:px-10 md:px-12 py-3 sm:py-4 text-lg sm:text-xl md:text-2xl transition-all duration-300 transform hover:scale-105 glow-effect-pink overflow-hidden w-full sm:w-auto"
