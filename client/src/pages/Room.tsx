@@ -1,18 +1,32 @@
-import { Copy, Users, Play, Crown, Film, Link as LinkIcon } from "lucide-react";
+import {
+  Copy,
+  Users,
+  Play,
+  Crown,
+  Film,
+  Link as LinkIcon,
+  DoorOpen,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { Room, RootState } from "../types/types";
+import { useNavigate } from "react-router";
+import type { Room as RoomData, RootState } from "../types/types";
 import socket from "../services/socket";
 import { updateRoom } from "../store/slices/roomSlice";
+import { setUsername as setUsernameAction } from "../store/slices/playerSlice";
 
 const Room = () => {
   const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const roomId = useSelector((state: RootState) => state.room.id);
   const username = useSelector((state: RootState) => state.player.username);
   const playersObject = useSelector((state: RootState) => state.room.players);
   const players = Object.values(playersObject);
+  const currentPlayer = socket.id ? playersObject[socket.id] : undefined;
+  const isCurrentPlayerHost = currentPlayer?.isHost ?? false;
+  const isCurrentPlayerReady = currentPlayer?.isReady ?? false;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(roomId);
@@ -23,9 +37,32 @@ const Room = () => {
   const readyCount = players.filter((p) => p.isReady).length;
   const canStart = readyCount === players.length;
 
+  const handleLeaveRoom = () => {
+    if (roomId) {
+      socket.emit("leave-room", { roomId });
+    }
+
+    socket.off("room-updated");
+    dispatch(updateRoom({ id: "", players: {} }));
+    dispatch(setUsernameAction(""));
+    navigate("/");
+  };
+
+  const handleToggleReady = () => {
+    if (!roomId) {
+      return;
+    }
+
+    socket.emit("toggle-ready", { roomId, isReady: !isCurrentPlayerReady });
+  };
+
   useEffect(() => {
+    if (!roomId || !username) {
+      return;
+    }
+
     socket.emit("create-room", { roomId, username });
-    socket.on("room-updated", (room: Room) => {
+    socket.on("room-updated", (room: RoomData) => {
       dispatch(updateRoom(room));
     });
 
@@ -36,6 +73,15 @@ const Room = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-4 relative overflow-hidden">
+      <button
+        onClick={handleLeaveRoom}
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20 p-2.5 sm:p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-all duration-300 transform hover:scale-105"
+        aria-label="Вийти з кімнати"
+        title="Вийти з кімнати"
+      >
+        <DoorOpen className="w-5 h-5 sm:w-6 sm:h-6" />
+      </button>
+
       <div className="absolute top-5 sm:top-10 right-4 sm:right-10 text-purple-500/10 animate-float">
         <Film className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24" />
       </div>
@@ -143,17 +189,27 @@ const Room = () => {
         </div>
 
         {/* Кнопки керування */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <button className="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 text-sm sm:text-base">
-            Вийти з кімнати
-          </button>
-          <button
-            disabled={!canStart}
-            className="flex-1 bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 transform hover:scale-105 disabled:transform-none glow-effect-pink disabled:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"
-          >
-            <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-            {canStart ? "Почати гру" : "Очікування гравців..."}
-          </button>
+        <div className="flex">
+          {isCurrentPlayerHost ? (
+            <button
+              disabled={!canStart}
+              className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 transform hover:scale-105 disabled:transform-none glow-effect-pink disabled:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"
+            >
+              <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
+              {canStart ? "Почати гру" : "Очікування гравців..."}
+            </button>
+          ) : (
+            <button
+              onClick={handleToggleReady}
+              className={`w-full font-semibold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 text-sm sm:text-base ${
+                isCurrentPlayerReady
+                  ? "bg-green-600 hover:bg-green-500 text-white"
+                  : "bg-slate-800 hover:bg-slate-700 text-white"
+              }`}
+            >
+              {isCurrentPlayerReady ? "Я не готовий" : "Готовий!"}
+            </button>
+          )}
         </div>
 
         {!canStart && (

@@ -20,6 +20,7 @@ export const io = new Server(server, {
   },
 });
 
+// connect socket
 setupRoomHandlers(io);
 
 server.listen(8000, () => {

@@ -3,7 +3,7 @@ import { Room } from "../types/room.types";
 import { generateUniqueRoomId } from "../utils/utils";
 import { Response, Request } from "express";
 
-export const roomCreate = async (req: Request, res: Response) => {
+export const roomCreate = async (_req: Request, res: Response) => {
   //generate id
   const roomId = generateUniqueRoomId();
 

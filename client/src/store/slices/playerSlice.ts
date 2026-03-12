@@ -17,6 +17,9 @@ export const playerSlice = createSlice({
     setUsername(state, action: PayloadAction<string>) {
       state.username = action.payload;
     },
+    setIsReady(state, action: PayloadAction<boolean>) {
+      state.isReady = action.payload;
+    },
   },
 });
 
