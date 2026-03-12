@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 
 import router from "./routes/room.routes";
+import { setupRoomHandlers } from "./sockets/roomHandlers";
 
 export const app = express();
 
@@ -18,6 +19,8 @@ export const io = new Server(server, {
     origin: "http://localhost:5173",
   },
 });
+
+setupRoomHandlers(io);
 
 server.listen(8000, () => {
   console.log("Server is listening");

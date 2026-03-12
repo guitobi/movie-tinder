@@ -11,13 +11,8 @@ const Room = () => {
 
   const roomId = useSelector((state: RootState) => state.room.id);
   const username = useSelector((state: RootState) => state.player.username);
-
-  //mock data
-  const players = [
-    { id: 1, name: "Олександр", isHost: true, isReady: true },
-    { id: 2, name: "Марія", isHost: false, isReady: true },
-    { id: 3, name: "Іван", isHost: false, isReady: false },
-  ];
+  const playersObject = useSelector((state: RootState) => state.room.players);
+  const players = Object.values(playersObject);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(roomId);
@@ -110,12 +105,12 @@ const Room = () => {
               >
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-purple-600 to-pink-600 flex items-center justify-center font-bold text-white text-base sm:text-lg glow-effect">
-                    {player.name[0].toUpperCase()}
+                    {player.username[0].toUpperCase()}
                   </div>
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <p className="text-white font-semibold text-sm sm:text-base">
-                        {player.name}
+                        {player.username}
                       </p>
                       {player.isHost && (
                         <div className="flex items-center gap-1 bg-yellow-500/20 text-yellow-400 px-1.5 sm:px-2 py-0.5 rounded-full text-xs">
