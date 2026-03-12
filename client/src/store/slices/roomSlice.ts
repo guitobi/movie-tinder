@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
-import type { Room } from "../../types/types";
+import type { Player, Room } from "../../types/types";
 
 const initialState: Room = {
   id: "",
@@ -10,7 +11,20 @@ const initialState: Room = {
 export const roomSlice = createSlice({
   name: "room",
   initialState,
-  reducers: {},
+  reducers: {
+    setRoomId(state, action: PayloadAction<string>) {
+      state.id = action.payload;
+    },
+    setPlayers(state, action: PayloadAction<Player>) {
+      state.players[action.payload.id] = action.payload;
+    },
+    updateRoom(state, action: PayloadAction<Room>) {
+      state.id = action.payload.id;
+      state.players = action.payload.players;
+    },
+  },
 });
+
+export const { setRoomId, setPlayers, updateRoom } = roomSlice.actions;
 
 export default roomSlice.reducer;

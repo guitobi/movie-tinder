@@ -1,9 +1,18 @@
 import { Copy, Users, Play, Crown, Film, Link as LinkIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { Room, RootState } from "../types/types";
+import socket from "../services/socket";
+import { updateRoom } from "../store/slices/roomSlice";
 
 const Room = () => {
   const [copied, setCopied] = useState(false);
-  const roomCode = "1212";
+  const dispatch = useDispatch();
+
+  const roomId = useSelector((state: RootState) => state.room.id);
+  const username = useSelector((state: RootState) => state.player.username);
+
+  //mock data
   const players = [
     { id: 1, name: "Олександр", isHost: true, isReady: true },
     { id: 2, name: "Марія", isHost: false, isReady: true },
@@ -11,13 +20,24 @@ const Room = () => {
   ];
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(roomCode);
+    navigator.clipboard.writeText(roomId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const readyCount = players.filter((p) => p.isReady).length;
   const canStart = readyCount === players.length;
+
+  useEffect(() => {
+    socket.emit("create-room", { roomId, username });
+    socket.on("room-updated", (room: Room) => {
+      dispatch(updateRoom(room));
+    });
+
+    return () => {
+      socket.off("room-updated");
+    };
+  }, [roomId, username, dispatch]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-4 relative overflow-hidden">
@@ -40,7 +60,7 @@ const Room = () => {
                 Код кімнати
               </p>
               <p className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-wider">
-                #{roomCode}
+                #{roomId}
               </p>
             </div>
             <button

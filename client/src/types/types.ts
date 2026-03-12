@@ -1,3 +1,9 @@
+import type { store } from "../store/store";
+
+export interface CreateRoomResponse {
+  roomId: string;
+}
+
 export interface Player {
   id: string;
   username: string;
@@ -18,3 +24,5 @@ export interface Game {
   //   matchedMovies: null; movie object as a type
   isLoading: boolean;
 }
+
+export type RootState = ReturnType<typeof store.getState>;
