@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import type { Room as RoomData, RootState } from "../types/types";
-import socket from "../services/socket";
+import socket, { startGameHandler } from "../services/socket";
 import { updateRoom } from "../store/slices/roomSlice";
 import { setUsername as setUsernameAction } from "../store/slices/playerSlice";
 
@@ -54,6 +54,10 @@ const Room = () => {
     }
 
     socket.emit("toggle-ready", { roomId, isReady: !isCurrentPlayerReady });
+  };
+
+  const handleStartGame = () => {
+    startGameHandler(roomId);
   };
 
   useEffect(() => {
@@ -193,6 +197,7 @@ const Room = () => {
           {isCurrentPlayerHost ? (
             <button
               disabled={!canStart}
+              onClick={handleStartGame}
               className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 transform hover:scale-105 disabled:transform-none glow-effect-pink disabled:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"
             >
               <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />

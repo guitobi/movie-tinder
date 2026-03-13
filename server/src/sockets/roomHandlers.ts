@@ -6,6 +6,7 @@ import {
 } from "../types/socket.types";
 import { rooms } from "../store/roomStore";
 import { Player } from "../types/room.types";
+import { startGameHandler } from "./gameHandlers";
 
 const removePlayerFromRoom = (socketId: string, roomId: string, io: Server) => {
   const room = rooms.get(roomId);
@@ -54,6 +55,10 @@ export const setupRoomHandlers = (io: Server) => {
       room.players[socket.id] = player;
       socket.join(roomId);
       io.to(roomId).emit("room-updated", room);
+    });
+
+    socket.on("start-game", (roomId: string) => {
+      startGameHandler(roomId, io);
     });
 
     socket.on("leave-room", ({ roomId }: LeaveRoomPayload) => {
