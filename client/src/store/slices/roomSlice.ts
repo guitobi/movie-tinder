@@ -6,6 +6,7 @@ import type { Player, Room } from "../../types/types";
 const initialState: Room = {
   id: "",
   players: {},
+  movies: [],
 };
 
 export const roomSlice = createSlice({
@@ -21,6 +22,7 @@ export const roomSlice = createSlice({
     updateRoom(state, action: PayloadAction<Room>) {
       state.id = action.payload.id;
       state.players = action.payload.players;
+      state.movies = action.payload.movies;
     },
   },
 });

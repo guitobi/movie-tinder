@@ -1,6 +1,7 @@
 export interface JoinRoomPayload {
   roomId: string;
   username: string;
+  playerToken?: string;
 }
 
 export interface LeaveRoomPayload {

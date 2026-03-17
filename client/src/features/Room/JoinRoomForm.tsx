@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { setUsername as setUsernameAction } from "../../store/slices/playerSlice";
 import { setRoomId } from "../../store/slices/roomSlice";
+import { setSessionStorage } from "../../utils/utils";
 import EntryFormLayout from "./EntryFormLayout";
 import UserNameInput from "./UserNameInput";
 
@@ -37,6 +38,7 @@ const JoinRoomForm = ({ onClose }: JoinRoomFormProps) => {
     setErrorMessage("");
     dispatch(setUsernameAction(trimmedUsername));
     dispatch(setRoomId(trimmedRoomCode));
+    setSessionStorage(trimmedUsername, trimmedRoomCode);
     navigate(`/rooms/${trimmedRoomCode}`);
     onClose?.();
   };

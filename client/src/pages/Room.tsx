@@ -14,6 +14,7 @@ import type { Room as RoomData, RootState } from "../types/types";
 import socket, { startGameHandler } from "../services/socket";
 import { updateRoom } from "../store/slices/roomSlice";
 import { setUsername as setUsernameAction } from "../store/slices/playerSlice";
+import { clearSessionStorage, getOrCreatePlayerToken } from "../utils/utils";
 
 const Room = () => {
   const [copied, setCopied] = useState(false);
@@ -25,7 +26,6 @@ const Room = () => {
   const playersObject = useSelector((state: RootState) => state.room.players);
   const players = Object.values(playersObject);
   const currentPlayer = socket.id ? playersObject[socket.id] : undefined;
-  const isCurrentPlayerHost = currentPlayer?.isHost ?? false;
   const isCurrentPlayerReady = currentPlayer?.isReady ?? false;
 
   const handleCopy = () => {
@@ -43,8 +43,9 @@ const Room = () => {
     }
 
     socket.off("room-updated");
-    dispatch(updateRoom({ id: "", players: {} }));
+    dispatch(updateRoom({ id: "", players: {}, movies: [] }));
     dispatch(setUsernameAction(""));
+    clearSessionStorage();
     navigate("/");
   };
 
@@ -65,15 +66,28 @@ const Room = () => {
       return;
     }
 
-    socket.emit("create-room", { roomId, username });
-    socket.on("room-updated", (room: RoomData) => {
+    const handleRoomUpdated = (room: RoomData) => {
       dispatch(updateRoom(room));
+    };
+
+    const handleStartingGame = (room: RoomData) => {
+      dispatch(updateRoom(room));
+      navigate(`/rooms/${room.id}/game`);
+    };
+
+    socket.on("room-updated", handleRoomUpdated);
+    socket.on("starting-game", handleStartingGame);
+    socket.emit("create-room", {
+      roomId,
+      username,
+      playerToken: getOrCreatePlayerToken(),
     });
 
     return () => {
-      socket.off("room-updated");
+      socket.off("room-updated", handleRoomUpdated);
+      socket.off("starting-game", handleStartingGame);
     };
-  }, [roomId, username, dispatch]);
+  }, [roomId, username, dispatch, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-4 relative overflow-hidden">
@@ -193,28 +207,24 @@ const Room = () => {
         </div>
 
         {/* Кнопки керування */}
-        <div className="flex">
-          {isCurrentPlayerHost ? (
-            <button
-              disabled={!canStart}
-              onClick={handleStartGame}
-              className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 transform hover:scale-105 disabled:transform-none glow-effect-pink disabled:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"
-            >
-              <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-              {canStart ? "Почати гру" : "Очікування гравців..."}
-            </button>
-          ) : (
-            <button
-              onClick={handleToggleReady}
-              className={`w-full font-semibold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 text-sm sm:text-base ${
-                isCurrentPlayerReady
-                  ? "bg-green-600 hover:bg-green-500 text-white"
-                  : "bg-slate-800 hover:bg-slate-700 text-white"
-              }`}
-            >
-              {isCurrentPlayerReady ? "Я не готовий" : "Готовий!"}
-            </button>
-          )}
+        <div className="flex flex-col gap-5">
+          <button
+            onClick={handleToggleReady}
+            className={`w-full font-semibold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 text-sm sm:text-base ${
+              isCurrentPlayerReady
+                ? "bg-green-600 hover:bg-green-500 text-white"
+                : "bg-slate-800 hover:bg-slate-700 text-white"
+            }`}
+          >
+            {isCurrentPlayerReady ? "Я не готовий" : "Готовий!"}
+          </button>
+          <button
+            onClick={handleStartGame}
+            disabled={!canStart && currentPlayer?.isHost}
+            className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 transform hover:scale-105 disabled:transform-none glow-effect-pink disabled:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"
+          >
+            <Play /> Почати гру
+          </button>
         </div>
 
         {!canStart && (

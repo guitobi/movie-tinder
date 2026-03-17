@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { setUsername as setUsernameAction } from "../../store/slices/playerSlice";
 import { setRoomId } from "../../store/slices/roomSlice";
 import type { CreateRoomResponse } from "../../types/types";
+import { setSessionStorage } from "../../utils/utils";
 import EntryFormLayout from "./EntryFormLayout";
 import UserNameInput from "./UserNameInput";
 
@@ -45,6 +46,7 @@ const CreateRoomForm = ({ onClose }: CreateRoomFormProps) => {
 
       const data: CreateRoomResponse = await response.json();
       dispatch(setRoomId(data.roomId));
+      setSessionStorage(trimmedUsername, data.roomId);
       navigate(`/rooms/${data.roomId}`);
       onClose?.();
     } catch (error) {

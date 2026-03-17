@@ -1,5 +1,6 @@
 export interface Player {
   id: string;
+  playerToken?: string;
   username: string;
   likes: [];
   isReady: boolean;
