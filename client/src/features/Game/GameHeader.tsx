@@ -10,7 +10,7 @@ interface GameHeaderProps {
 const GameHeader = ({ roomId, cardProgress, matchState }: GameHeaderProps) => {
   return (
     <header className="movie-card p-3 sm:p-5 lg:p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-start gap-2.5 sm:gap-4">
           <Link
             to={roomId ? `/rooms/${roomId}` : "/"}
@@ -25,7 +25,10 @@ const GameHeader = ({ roomId, cardProgress, matchState }: GameHeaderProps) => {
               <Popcorn className="h-4 w-4" />
               MovieMatch Session
             </div>
-            <h1 className="text-2xl font-black text-white sm:text-4xl lg:text-5xl">
+            <p className="text-base font-black text-white sm:hidden">
+              Раунд вибору
+            </p>
+            <h1 className="hidden text-2xl font-black text-white sm:block sm:text-4xl lg:text-5xl">
               Раунд вибору фільму
             </h1>
             <p className="mt-1.5 hidden max-w-2xl text-xs leading-5 text-slate-300 sm:mt-2 sm:block sm:text-base sm:leading-normal">

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Spinner, { DEFAULT_SPINNER_CLOSE_DELAY_MS } from "../../ui/Spinner";
 
 type WinnerMovieProps = {
   hasWinnerMovie: boolean;
@@ -11,31 +12,44 @@ type WinnerMovieProps = {
     backdrop_path?: string;
     poster_path?: string;
   };
-  onClose: () => void;
+  onClose: () => Promise<void> | void;
+  closeDelayMs?: number;
 };
 
 const WinnerMovie = ({
   hasWinnerMovie,
   winnerMovie,
   onClose,
+  closeDelayMs = DEFAULT_SPINNER_CLOSE_DELAY_MS,
 }: WinnerMovieProps) => {
   const [dismissedWinnerId, setDismissedWinnerId] = useState<number | null>(
     null,
   );
+  const [isClosing, setIsClosing] = useState(false);
   const isWinnerOverlayOpen =
     winnerMovie.id !== 0 && winnerMovie.id !== dismissedWinnerId;
 
-  const handleClose = () => {
-    if (!winnerMovie.id) {
+  const handleClose = async () => {
+    if (!winnerMovie.id || isClosing) {
       return;
     }
 
-    setDismissedWinnerId(winnerMovie.id);
-    onClose();
+    setIsClosing(true);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, closeDelayMs));
+      await Promise.resolve(onClose());
+      setDismissedWinnerId(winnerMovie.id);
+    } finally {
+      setIsClosing(false);
+    }
   };
 
   return hasWinnerMovie && isWinnerOverlayOpen ? (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 px-3 py-4 backdrop-blur-md sm:flex sm:items-center sm:justify-center sm:px-6 sm:py-6">
+      {isClosing ? (
+        <Spinner fullscreen className="h-12 w-12 text-white" />
+      ) : null}
       <div className="movie-card w-full max-w-4xl overflow-hidden p-0 sm:max-h-[90vh]">
         <div className="relative h-48 w-full sm:h-80">
           {winnerMovie.backdrop_path || winnerMovie.poster_path ? (
@@ -69,9 +83,12 @@ const WinnerMovie = ({
             <button
               type="button"
               onClick={handleClose}
-              className="mt-6 w-full rounded-2xl bg-pink-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-pink-400 sm:w-fit"
+              disabled={isClosing}
+              className="mt-6 w-full rounded-2xl bg-pink-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-pink-400 disabled:cursor-not-allowed disabled:opacity-75 sm:w-fit"
             >
-              Зрозуміло
+              <span className="inline-flex items-center gap-2">
+                {isClosing ? "Зачекай..." : "Зрозуміло"}
+              </span>
             </button>
           </div>
         </div>
@@ -97,9 +114,12 @@ const WinnerMovie = ({
           <button
             type="button"
             onClick={handleClose}
-            className="w-full rounded-2xl bg-pink-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-pink-400"
+            disabled={isClosing}
+            className="w-full rounded-2xl bg-pink-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-pink-400 disabled:cursor-not-allowed disabled:opacity-75"
           >
-            Зрозуміло
+            <span className="inline-flex items-center gap-2">
+              {isClosing ? "Зачекай..." : "Зрозуміло"}
+            </span>
           </button>
         </div>
       </div>

@@ -2,7 +2,7 @@ import GameHeader from "./GameHeader";
 import GameMatchPanel from "./GameMatchPanel";
 import GameMoviePanel from "./GameMoviePanel";
 import GamePlayersPanel from "./GamePlayersPanel";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import socket from "../../services/socket";
 import {
@@ -23,6 +23,9 @@ interface GameViewProps {
 
 const GameView = ({ roomId }: GameViewProps) => {
   const navigate = useNavigate();
+  const [mobilePanel, setMobilePanel] = useState<"players" | "match">(
+    "players",
+  );
 
   const dispatch = useDispatch();
   const username = useSelector((state: RootState) => state.player.username);
@@ -34,7 +37,7 @@ const GameView = ({ roomId }: GameViewProps) => {
   const players = Object.values(room.players);
   const movies = room.movies;
   const activeMovie = movies[currentIndex] ?? movies[0];
-  const movieId = activeMovie.id;
+  const movieId = activeMovie?.id;
   const upcomingMovie = movies[currentIndex + 1];
 
   const playersObject = useSelector((state: RootState) => state.room.players);
@@ -75,12 +78,14 @@ const GameView = ({ roomId }: GameViewProps) => {
   //sockets connect hook
   useGameSockets(roomId, username);
 
-  const handleWinnerClose = () => {
-    if (roomId) {
-      socket.emit("reset-round", { roomId });
-      navigate(`/rooms/${roomId}`);
-      dispatch(setIsReady(false));
+  const handleWinnerClose = async () => {
+    if (!roomId) {
+      return;
     }
+
+    socket.emit("reset-round", { roomId });
+    dispatch(setIsReady(false));
+    navigate(`/rooms/${roomId}`);
   };
 
   const handleSwipeLeft = () => {
@@ -159,6 +164,48 @@ const GameView = ({ roomId }: GameViewProps) => {
             />
           </aside>
         </div>
+
+        <section className="xl:hidden">
+          <div className="mb-3 grid grid-cols-2 gap-2 rounded-2xl border border-purple-500/15 bg-slate-950/35 p-1.5">
+            <button
+              type="button"
+              onClick={() => setMobilePanel("players")}
+              className={`rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                mobilePanel === "players"
+                  ? "bg-purple-500/30 text-white"
+                  : "text-slate-300"
+              }`}
+            >
+              Гравці
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobilePanel("match")}
+              className={`rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                mobilePanel === "match"
+                  ? "bg-pink-500/30 text-white"
+                  : "text-slate-300"
+              }`}
+            >
+              Match
+            </button>
+          </div>
+
+          {mobilePanel === "players" ? (
+            <GamePlayersPanel
+              players={playersPanelData}
+              onlineCount={onlineCount}
+            />
+          ) : (
+            <GameMatchPanel
+              winnerMovie={winnerMovie}
+              title={matchTitle}
+              description={matchDescription}
+              status={matchStatus}
+              nextStep={nextStep}
+            />
+          )}
+        </section>
       </div>
     </div>
   );

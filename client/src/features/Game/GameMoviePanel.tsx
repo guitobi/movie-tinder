@@ -353,28 +353,30 @@ const GameMoviePanel = ({
             ))}
           </div>
 
-          <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-            <button
-              onClick={onSwipeLeft}
-              disabled={!canSwipe}
-              className="group flex items-center justify-center gap-2.5 rounded-xl border border-rose-400/25 bg-rose-500/10 px-4 py-3 text-sm font-bold text-rose-200 transition-all hover:scale-[1.02] hover:bg-rose-500/20 disabled:cursor-not-allowed disabled:opacity-50 sm:gap-3 sm:rounded-[22px] sm:px-5 sm:py-4 sm:text-lg"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-rose-500 text-white shadow-lg shadow-rose-500/30 sm:h-11 sm:w-11">
-                <X className="h-4 w-4 sm:h-5 sm:w-5" />
-              </span>
-              Пропустити
-            </button>
+          <div className="sticky bottom-0 z-20 -mx-4 mt-1 border-t border-white/10 bg-slate-950/85 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] backdrop-blur sm:static sm:mx-0 sm:mt-0 sm:border-0 sm:bg-transparent sm:px-0 sm:pt-0 sm:pb-0 sm:backdrop-blur-none">
+            <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
+              <button
+                onClick={onSwipeLeft}
+                disabled={!canSwipe}
+                className="group flex items-center justify-center gap-2.5 rounded-xl border border-rose-400/25 bg-rose-500/10 px-4 py-3 text-sm font-bold text-rose-200 transition-all hover:scale-[1.02] hover:bg-rose-500/20 active:scale-95 active:bg-rose-500/25 disabled:cursor-not-allowed disabled:opacity-50 sm:gap-3 sm:rounded-[22px] sm:px-5 sm:py-4 sm:text-lg"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-rose-500 text-white shadow-lg shadow-rose-500/30 sm:h-11 sm:w-11">
+                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
+                </span>
+                Пропустити
+              </button>
 
-            <button
-              onClick={onSwipeRight}
-              disabled={!canSwipe}
-              className="group flex items-center justify-center gap-2.5 rounded-xl bg-linear-to-r from-fuchsia-500 via-pink-500 to-rose-500 px-4 py-3 text-sm font-bold text-white transition-all hover:scale-[1.02] glow-effect-pink disabled:cursor-not-allowed disabled:opacity-50 sm:gap-3 sm:rounded-[22px] sm:px-5 sm:py-4 sm:text-lg"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm sm:h-11 sm:w-11">
-                <Heart className="h-4 w-4 fill-current sm:h-5 sm:w-5" />
-              </span>
-              Обираю це
-            </button>
+              <button
+                onClick={onSwipeRight}
+                disabled={!canSwipe}
+                className="group flex items-center justify-center gap-2.5 rounded-xl bg-linear-to-r from-fuchsia-500 via-pink-500 to-rose-500 px-4 py-3 text-sm font-bold text-white transition-all hover:scale-[1.02] active:scale-95 active:brightness-110 glow-effect-pink disabled:cursor-not-allowed disabled:opacity-50 sm:gap-3 sm:rounded-[22px] sm:px-5 sm:py-4 sm:text-lg"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm sm:h-11 sm:w-11">
+                  <Heart className="h-4 w-4 fill-current sm:h-5 sm:w-5" />
+                </span>
+                Обираю це
+              </button>
+            </div>
           </div>
         </div>
       </div>
