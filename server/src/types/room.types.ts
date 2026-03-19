@@ -11,6 +11,7 @@ export interface Room {
   id: string;
   players: Record<string, Player>;
   movies: Movie[];
+  likedMovies: Record<number, string[]>;
 }
 
 export interface Movie {

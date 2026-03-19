@@ -12,3 +12,9 @@ export interface ToggleReadyPayload {
   roomId: string;
   isReady: boolean;
 }
+
+export interface SwipeMoviePaload {
+  roomId: string;
+  playerId: string;
+  movieId: number;
+}

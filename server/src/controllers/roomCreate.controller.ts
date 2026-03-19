@@ -12,6 +12,7 @@ export const roomCreate = async (_req: Request, res: Response) => {
     id: roomId,
     players: {},
     movies: [],
+    likedMovies: {},
   };
   //add room to store
   rooms.set(roomId, room);

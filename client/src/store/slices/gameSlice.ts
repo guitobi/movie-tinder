@@ -1,12 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Game } from "../../types/types";
+import type { Game, Movie } from "../../types/types";
 
 const initialState: Game = {
-  movies: [],
   currentIndex: 0,
-  playerLikes: [],
   isLoading: false,
+  winnerMovie: {
+    adult: false,
+    backdrop_path: "",
+    genre_ids: [],
+    id: 0,
+    original_language: "",
+    original_title: "",
+    overview: "",
+    popularity: 0,
+    poster_path: "",
+    release_date: "",
+    title: "",
+    video: false,
+    vote_average: 0,
+    vote_count: 0,
+  },
 };
 
 export const gameSlice = createSlice({
@@ -15,7 +29,6 @@ export const gameSlice = createSlice({
   reducers: {
     resetGameState(state) {
       state.currentIndex = 0;
-      state.playerLikes = [];
     },
     setCurrentIndex(state, action: PayloadAction<number>) {
       state.currentIndex = Math.max(0, action.payload);
@@ -24,15 +37,13 @@ export const gameSlice = createSlice({
       const lastIndex = Math.max(action.payload.totalMovies - 1, 0);
       state.currentIndex = Math.min(state.currentIndex + 1, lastIndex);
     },
-    addPlayerLike(state, action: PayloadAction<number>) {
-      if (!state.playerLikes.includes(action.payload)) {
-        state.playerLikes.push(action.payload);
-      }
+    setWinnerMovie(state, action: PayloadAction<Movie>) {
+      state.winnerMovie = action.payload;
     },
   },
 });
 
-export const { resetGameState, setCurrentIndex, nextMovie, addPlayerLike } =
+export const { resetGameState, setCurrentIndex, nextMovie, setWinnerMovie } =
   gameSlice.actions;
 
 export default gameSlice.reducer;

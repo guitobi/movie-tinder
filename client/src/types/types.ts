@@ -36,11 +36,10 @@ export interface Room {
 }
 
 export interface Game {
-  movies: Movie[];
   currentIndex: number;
-  playerLikes: number[];
   //   matchedMovies: null; movie object as a type
   isLoading: boolean;
+  winnerMovie: Movie;
 }
 
 export type RootState = ReturnType<typeof store.getState>;

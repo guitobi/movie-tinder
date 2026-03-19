@@ -3,6 +3,8 @@ interface SessionStorageFunc {
 }
 
 const PLAYER_TOKEN_KEY = "playerToken";
+const USERNAME_KEY = "username";
+const ROOMID_KEY = "roomId";
 
 export interface SessionStorageOutput {
   username: string | null;
@@ -10,8 +12,8 @@ export interface SessionStorageOutput {
 }
 
 export const setSessionStorage: SessionStorageFunc = (username, roomId) => {
-  sessionStorage.setItem("username", username);
-  sessionStorage.setItem("roomId", roomId);
+  sessionStorage.setItem(USERNAME_KEY, username);
+  sessionStorage.setItem(ROOMID_KEY, roomId);
   getOrCreatePlayerToken();
 };
 
@@ -32,14 +34,14 @@ export const getOrCreatePlayerToken = () => {
 };
 
 export const clearSessionStorage = () => {
-  sessionStorage.removeItem("username");
-  sessionStorage.removeItem("roomId");
+  sessionStorage.removeItem(USERNAME_KEY);
+  sessionStorage.removeItem(ROOMID_KEY);
   sessionStorage.removeItem(PLAYER_TOKEN_KEY);
 };
 
 export const getSessionStorage = () => {
-  const username = sessionStorage.getItem("username");
-  const roomId = sessionStorage.getItem("roomId");
+  const username = sessionStorage.getItem(USERNAME_KEY);
+  const roomId = sessionStorage.getItem(ROOMID_KEY);
 
   if (username && roomId) return { username, roomId };
   return null;

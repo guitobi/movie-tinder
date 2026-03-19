@@ -2,11 +2,12 @@ import { Server } from "socket.io";
 import {
   JoinRoomPayload,
   LeaveRoomPayload,
+  SwipeMoviePaload,
   ToggleReadyPayload,
 } from "../types/socket.types";
 import { rooms } from "../store/roomStore";
 import { Player } from "../types/room.types";
-import { startGameHandler } from "./gameHandlers";
+import { likedMovieHandler, startGameHandler } from "./gameHandlers";
 
 const ROOM_DELETE_GRACE_MS = 15000;
 const pendingRoomDeletionTimeouts = new Map<
@@ -164,6 +165,10 @@ export const setupRoomHandlers = (io: Server) => {
 
       player.isReady = isReady;
       io.to(roomId).emit("room-updated", room);
+    });
+
+    socket.on("like", ({ roomId, movieId, playerId }: SwipeMoviePaload) => {
+      likedMovieHandler(roomId, playerId, movieId, io);
     });
 
     socket.on("disconnecting", () => {

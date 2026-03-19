@@ -77,10 +77,11 @@ const Room = () => {
 
     socket.on("room-updated", handleRoomUpdated);
     socket.on("starting-game", handleStartingGame);
+    const playerToken = getOrCreatePlayerToken();
     socket.emit("create-room", {
       roomId,
       username,
-      playerToken: getOrCreatePlayerToken(),
+      playerToken,
     });
 
     return () => {
