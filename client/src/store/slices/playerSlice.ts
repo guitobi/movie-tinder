@@ -23,6 +23,6 @@ export const playerSlice = createSlice({
   },
 });
 
-export const { setUsername } = playerSlice.actions;
+export const { setUsername, setIsReady } = playerSlice.actions;
 
 export default playerSlice.reducer;

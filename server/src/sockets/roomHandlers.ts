@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import {
   JoinRoomPayload,
   LeaveRoomPayload,
+  ResetRoundPayload,
   SwipeMoviePaload,
   ToggleReadyPayload,
 } from "../types/socket.types";
@@ -169,6 +170,24 @@ export const setupRoomHandlers = (io: Server) => {
 
     socket.on("like", ({ roomId, movieId, playerId }: SwipeMoviePaload) => {
       likedMovieHandler(roomId, playerId, movieId, io);
+    });
+
+    socket.on("reset-round", ({ roomId }: ResetRoundPayload) => {
+      const room = rooms.get(roomId);
+
+      if (!room) {
+        return;
+      }
+
+      room.movies = [];
+      room.likedMovies = {};
+
+      for (const player of Object.values(room.players)) {
+        player.isReady = false;
+        player.likes = [];
+      }
+
+      io.to(roomId).emit("room-updated", room);
     });
 
     socket.on("disconnecting", () => {

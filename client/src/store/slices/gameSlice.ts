@@ -28,7 +28,9 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     resetGameState(state) {
-      state.currentIndex = 0;
+      state.currentIndex = initialState.currentIndex;
+      state.isLoading = initialState.isLoading;
+      state.winnerMovie = initialState.winnerMovie;
     },
     setCurrentIndex(state, action: PayloadAction<number>) {
       state.currentIndex = Math.max(0, action.payload);

@@ -13,6 +13,10 @@ export interface ToggleReadyPayload {
   isReady: boolean;
 }
 
+export interface ResetRoundPayload {
+  roomId: string;
+}
+
 export interface SwipeMoviePaload {
   roomId: string;
   playerId: string;

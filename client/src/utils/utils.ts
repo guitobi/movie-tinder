@@ -1,3 +1,5 @@
+import type { Movie } from "../types/types";
+
 interface SessionStorageFunc {
   (username: string, roomId: string): void;
 }
@@ -45,4 +47,60 @@ export const getSessionStorage = () => {
 
   if (username && roomId) return { username, roomId };
   return null;
+};
+
+export const mapMovieToPanelData = (movie: Movie | undefined) => {
+  if (!movie) {
+    return {
+      genre: "No data",
+      rating: "-",
+      eyebrow: "Featured movie",
+      title: "Очікуємо фільми з сервера",
+      meta: "Натисніть 'Почати гру' у кімнаті",
+      imageUrl: null,
+      description:
+        "Після запуску гри бекенд пришле об'єкт кімнати з масивом movies.",
+      tags: ["Waiting for room data"],
+      stats: [
+        { label: "Рейтинг", value: "-" },
+        { label: "Мова", value: "-" },
+        { label: "Голосів", value: "-" },
+      ],
+    };
+  }
+
+  const year = movie.release_date?.slice(0, 4) || "-";
+  const language = movie.original_language?.toUpperCase() || "-";
+  const imagePath = movie.backdrop_path || movie.poster_path || "";
+  const imageUrl = imagePath
+    ? `https://image.tmdb.org/t/p/w780${imagePath}`
+    : null;
+
+  const tags = [
+    movie.adult ? "18+" : "Family-friendly",
+    movie.video ? "Has trailer" : "Movie",
+    `Popularity ${Math.round(movie.popularity)}`,
+  ];
+
+  return {
+    genre:
+      movie.genre_ids.length > 0
+        ? `Genres: ${movie.genre_ids.join(", ")}`
+        : "Unknown genre",
+    rating: movie.vote_average ? movie.vote_average.toFixed(1) : "-",
+    eyebrow: "Featured movie",
+    title: movie.title || movie.original_title || "Untitled",
+    meta: `${year} • ${language} • votes ${movie.vote_count}`,
+    imageUrl,
+    description: movie.overview || "Опис відсутній",
+    tags,
+    stats: [
+      {
+        label: "Рейтинг",
+        value: movie.vote_average ? movie.vote_average.toFixed(1) : "-",
+      },
+      { label: "Мова", value: language },
+      { label: "Голосів", value: String(movie.vote_count) },
+    ],
+  };
 };
