@@ -18,6 +18,8 @@ import { clearSessionStorage, getOrCreatePlayerToken } from "../utils/utils";
 
 const Room = () => {
   const [copied, setCopied] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<string | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -114,7 +116,7 @@ const Room = () => {
             </h1>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-3 sm:mb-4">
+          <div className="flex flex-row sm:flex-row items-center justify-center gap-3 mb-3 sm:mb-4">
             <div className="bg-slate-900/50 px-4 sm:px-6 py-2 sm:py-3 rounded-xl border border-purple-500/30">
               <p className="text-slate-400 text-xs sm:text-sm mb-1">
                 Код кімнати
@@ -141,6 +143,62 @@ const Room = () => {
             <p className="text-xs sm:text-sm">
               Поділіться цим кодом з друзями, щоб вони приєдналися
             </p>
+          </div>
+        </div>
+
+        {/* Вибір режиму гри */}
+        <div className="movie-card p-4 sm:p-6 md:p-8 mb-4 sm:mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 flex items-center gap-2">
+            <Film className="text-purple-400 w-5 h-5 sm:w-6 sm:h-6" />
+            Оберіть режим гри
+          </h2>
+          <div className="relative">
+            <button
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="w-full flex items-center justify-between cursor-pointer hover:bg-slate-800/50 transition-colors duration-200 bg-slate-900/50 px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-purple-500/30 mb-2"
+            >
+              <p className="text-white text-base sm:text-lg font-semibold">
+                {selectedMode ? `Режим: ${selectedMode}` : "Виберіть режим..."}
+              </p>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`
+                  transition-transform duration-200 ${
+                    showDropdown ? "-rotate-180" : ""
+                  }
+                `}
+              >
+                <path d="M6 9L12 15L18 9H6Z" fill="white" />
+              </svg>
+            </button>
+            {showDropdown && (
+              <div className="w-full bg-slate-900/50 rounded-xl border border-purple-500/30 border-t-0 overflow-hidden">
+                <button
+                  onClick={() => {
+                    setSelectedMode("Режим 1");
+                    setShowDropdown(false);
+                  }}
+                  className="block w-full text-left px-4 sm:px-6 py-3 hover:bg-slate-800 transition-colors duration-200 text-white hover:text-purple-400"
+                  title="Режим 1"
+                >
+                  Режим 1
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedMode("Режим 2");
+                    setShowDropdown(false);
+                  }}
+                  className="block w-full text-left px-4 sm:px-6 py-3 hover:bg-slate-800 transition-colors duration-200 text-white hover:text-purple-400 border-t border-purple-500/20"
+                  title="Режим 2"
+                >
+                  Режим 2
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
