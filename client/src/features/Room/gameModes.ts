@@ -1,4 +1,4 @@
-import type { GameModeKey } from "../../types/types";
+export type GameModeKey = "top-imdb" | "legendary-horror";
 
 export interface GameModeOption {
   key: GameModeKey;
