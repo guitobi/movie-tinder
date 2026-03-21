@@ -1,5 +1,7 @@
 import type { store } from "../store/store";
 
+export type GameModeKey = "top-imdb" | "legendary-horror";
+
 export interface CreateRoomResponse {
   roomId: string;
 }
