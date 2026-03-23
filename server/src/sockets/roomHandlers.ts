@@ -3,6 +3,7 @@ import {
   JoinRoomPayload,
   LeaveRoomPayload,
   ResetRoundPayload,
+  StartGamePayload,
   SwipeMoviePaload,
   ToggleReadyPayload,
 } from "../types/socket.types";
@@ -142,9 +143,12 @@ export const setupRoomHandlers = (io: Server) => {
       },
     );
 
-    socket.on("start-game", (roomId: string) => {
-      startGameHandler(roomId, io);
-    });
+    socket.on(
+      "start-game",
+      ({ roomId, selectedMode, numberOfMovies }: StartGamePayload) => {
+        startGameHandler(roomId, selectedMode as any, numberOfMovies, io);
+      },
+    );
 
     socket.on("leave-room", ({ roomId }: LeaveRoomPayload) => {
       removePlayerFromRoom(socket.id, roomId, io);

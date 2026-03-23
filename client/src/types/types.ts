@@ -6,6 +6,14 @@ export interface CreateRoomResponse {
   roomId: string;
 }
 
+export interface GameModeOption {
+  key: GameModeKey;
+  title: string;
+  description: string;
+  details: string;
+  movieFeedHint: string;
+  presetCode: string;
+}
 export interface Player {
   id: string;
   username: string;

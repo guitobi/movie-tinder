@@ -1,13 +1,19 @@
 import { Server } from "socket.io";
 import { rooms } from "../store/roomStore";
 import { fetchPopularMovies } from "../utils/utils";
+import { selectedMode } from "../types/room.types";
 
-export const startGameHandler = async (roomId: string, io: Server) => {
+export const startGameHandler = async (
+  roomId: string,
+  selectedMode: selectedMode,
+  numberOfMovies: number,
+  io: Server,
+) => {
   const room = rooms.get(roomId);
 
   if (!room) return;
 
-  const fetchedMovies = await fetchPopularMovies();
+  const fetchedMovies = await fetchPopularMovies(selectedMode, numberOfMovies);
   if (!fetchedMovies) return;
   if (fetchedMovies.length === 0) return;
 

@@ -14,6 +14,8 @@ export interface Room {
   likedMovies: Record<number, string[]>;
 }
 
+export type selectedMode = "top-imdb" | "legendary-horror";
+
 export interface Movie {
   adult: boolean;
   backdrop_path: string;

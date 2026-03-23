@@ -1,12 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-import type { Player, Room } from "../../types/types";
+import type { GameModeKey, Player, Room } from "../../types/types";
 
-const initialState: Room = {
+interface RoomState {
+  id: string;
+  players: Record<string, Player>;
+  movies: Room["movies"];
+  gameModeKey: GameModeKey | null;
+  numberOfMovies: number;
+}
+
+const initialState: RoomState = {
   id: "",
   players: {},
   movies: [],
+  gameModeKey: null,
+  numberOfMovies: 0,
 };
 
 export const roomSlice = createSlice({
@@ -19,6 +29,12 @@ export const roomSlice = createSlice({
     setPlayers(state, action: PayloadAction<Player>) {
       state.players[action.payload.id] = action.payload;
     },
+    setGameModeKey(state, action: PayloadAction<GameModeKey | null>) {
+      state.gameModeKey = action.payload;
+    },
+    setNumberOfMovies(state, action: PayloadAction<number>) {
+      state.numberOfMovies = action.payload;
+    },
     updateRoom(state, action: PayloadAction<Room>) {
       state.id = action.payload.id;
       state.players = action.payload.players;
@@ -27,6 +43,12 @@ export const roomSlice = createSlice({
   },
 });
 
-export const { setRoomId, setPlayers, updateRoom } = roomSlice.actions;
+export const {
+  setRoomId,
+  setPlayers,
+  setGameModeKey,
+  setNumberOfMovies,
+  updateRoom,
+} = roomSlice.actions;
 
 export default roomSlice.reducer;
