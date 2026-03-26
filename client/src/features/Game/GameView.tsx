@@ -167,6 +167,7 @@ const GameView = ({ roomId }: GameViewProps) => {
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
           <GameMoviePanel
             {...moviePanelData}
+            movie={activeMovie}
             canSwipe={Boolean(activeMovie)}
             hasNextCard={Boolean(upcomingMovie)}
             nextTitle={nextMoviePanelData.title}

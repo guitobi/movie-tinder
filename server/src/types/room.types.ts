@@ -14,12 +14,20 @@ export interface Room {
   likedMovies: Record<number, string[]>;
 }
 
-export type selectedMode = "top-imdb" | "legendary-horror" | "new-releases";
+export type selectedMode =
+  | "top-imdb"
+  | "legendary-horror"
+  | "new-releases"
+  | "action-packed"
+  | "comedy-central"
+  | "romantic-evening"
+  | "sci-fi-fantasy"
+  | "90s-classics";
 
 export interface Movie {
   adult: boolean;
   backdrop_path: string;
-  genre_ids: [];
+  genre_ids: number[];
   id: number;
   original_language: string;
   original_title: string;
@@ -31,4 +39,23 @@ export interface Movie {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  runtime?: number;
+  director?: string;
+  cast?: string[];
+  trailer?: string;
+  genres?: { id: number; name: string }[];
+  streamingInfo?: {
+    platforms: {
+      flatrate?: Array<{
+        logo_path: string;
+        provider_name: string;
+        display_priority: number;
+      }>;
+      buy?: Array<{
+        logo_path: string;
+        provider_name: string;
+        display_priority: number;
+      }>;
+    };
+  };
 }

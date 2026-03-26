@@ -22,7 +22,7 @@ const ModePickerContent = ({
   isHost,
 }: ModePickerContentProps) => {
   return (
-    <div>
+    <div className="flex flex-col h-full max-h-[80vh] pb-2">
       <h3 className="text-xl font-bold text-white mb-1">Режим гри</h3>
       {!isHost && (
         <p className="text-sm text-amber-400 mb-2">
@@ -33,7 +33,7 @@ const ModePickerContent = ({
         Оберіть формат перед стартом матчу
       </p>
 
-      <div className="space-y-2">
+      <div className="space-y-2 max-h-64 overflow-y-auto pr-2 -mr-2 scrollbar-thin scrollbar-thumb-purple-500/30 scrollbar-track-slate-800/50">
         {gameModes.map((mode) => {
           const isSelected = selectedMode === mode.key;
 
@@ -90,7 +90,7 @@ const ModePickerContent = ({
           Оберіть, скільки фільмів буде в раунді
         </p>
 
-        <div className="mt-3 grid grid-cols-4 gap-2">
+        <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
           {MOVIES_COUNT_OPTIONS.map((count) => {
             const isSelected = selectedMoviesCount === count;
 

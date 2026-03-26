@@ -1,5 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Check, Heart, Star, X } from "lucide-react";
+import type { Movie } from "../../types/types";
+import MovieStreamingInfo from "./MovieStreamingInfo";
 
 interface GameMoviePanelProps {
   genre: string;
@@ -15,6 +17,7 @@ interface GameMoviePanelProps {
   hasNextCard: boolean;
   nextTitle: string;
   nextMeta: string;
+  movie?: Movie;
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
 }
@@ -33,6 +36,7 @@ const GameMoviePanel = ({
   hasNextCard,
   nextTitle,
   nextMeta,
+  movie,
   onSwipeLeft,
   onSwipeRight,
 }: GameMoviePanelProps) => {
@@ -351,6 +355,11 @@ const GameMoviePanel = ({
                 </p>
               </div>
             ))}
+          </div>
+
+          {/* Streaming Information */}
+          <div className="sm:block">
+            <MovieStreamingInfo movie={movie} />
           </div>
 
           <div className="sticky bottom-0 z-20 -mx-4 mt-1 border-t border-white/10 bg-slate-950/85 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] backdrop-blur sm:static sm:mx-0 sm:mt-0 sm:border-0 sm:bg-transparent sm:px-0 sm:pt-0 sm:pb-0 sm:backdrop-blur-none">

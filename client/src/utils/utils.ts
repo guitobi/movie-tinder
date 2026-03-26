@@ -66,6 +66,7 @@ export const mapMovieToPanelData = (movie: Movie | undefined) => {
         { label: "Мова", value: "-" },
         { label: "Голосів", value: "-" },
       ],
+      movie: undefined,
     };
   }
 
@@ -102,5 +103,6 @@ export const mapMovieToPanelData = (movie: Movie | undefined) => {
       { label: "Мова", value: language },
       { label: "Голосів", value: String(movie.vote_count) },
     ],
+    movie,
   };
 };
