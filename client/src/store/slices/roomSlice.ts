@@ -45,6 +45,20 @@ export const roomSlice = createSlice({
     setLoadingMovies(state, action: PayloadAction<boolean>) {
       state.isLoadingMovies = action.payload;
     },
+    resetRoomState(state) {
+      state.movies = initialState.movies;
+      state.isLoadingMovies = initialState.isLoadingMovies;
+    },
+    resetRoomForExit(state) {
+      state.movies = initialState.movies;
+      state.gameModeKey = initialState.gameModeKey;
+      state.numberOfMovies = initialState.numberOfMovies;
+      state.isLoadingMovies = initialState.isLoadingMovies;
+    },
+    clearMoviesOnly(state) {
+      state.movies = initialState.movies;
+      state.isLoadingMovies = initialState.isLoadingMovies;
+    },
   },
 });
 
@@ -55,6 +69,9 @@ export const {
   setNumberOfMovies,
   updateRoom,
   setLoadingMovies,
+  resetRoomState,
+  resetRoomForExit,
+  clearMoviesOnly,
 } = roomSlice.actions;
 
 export default roomSlice.reducer;

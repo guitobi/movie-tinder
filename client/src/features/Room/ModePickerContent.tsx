@@ -7,6 +7,7 @@ interface ModePickerContentProps {
   onSelectMode: (mode: GameModeKey) => void;
   onSelectMoviesCount: (count: number) => void;
   onClose?: () => void;
+  isHost: boolean;
 }
 
 const MOVIES_COUNT_OPTIONS = [5, 10, 15, 20];
@@ -18,10 +19,16 @@ const ModePickerContent = ({
   onSelectMode,
   onSelectMoviesCount,
   onClose,
+  isHost,
 }: ModePickerContentProps) => {
   return (
     <div>
       <h3 className="text-xl font-bold text-white mb-1">Режим гри</h3>
+      {!isHost && (
+        <p className="text-sm text-amber-400 mb-2">
+          Тільки хост може змінювати налаштування гри
+        </p>
+      )}
       <p className="text-sm text-slate-400 mb-4">
         Оберіть формат перед стартом матчу
       </p>
@@ -34,18 +41,23 @@ const ModePickerContent = ({
             <button
               key={mode.key}
               onClick={() => {
-                onSelectMode(mode.key);
-                // Close modal only if a movie count is already selected
-                if (selectedMoviesCount > 0) {
-                  onClose?.();
+                if (isHost) {
+                  onSelectMode(mode.key);
+                  // Close modal only if a movie count is already selected
+                  if (selectedMoviesCount > 0) {
+                    onClose?.();
+                  }
                 }
               }}
               className={`w-full text-left rounded-xl border px-4 py-3 transition-all duration-200 ${
                 isSelected
                   ? "bg-purple-600/20 border-purple-400"
-                  : "bg-slate-900/50 border-purple-500/20 hover:border-purple-400/60 hover:bg-slate-800/70"
+                  : isHost
+                    ? "bg-slate-900/50 border-purple-500/20 hover:border-purple-400/60 hover:bg-slate-800/70"
+                    : "bg-slate-900/30 border-purple-500/10 cursor-not-allowed opacity-50"
               }`}
-              title={mode.title}
+              title={isHost ? mode.title : "Тільки для хоста"}
+              disabled={!isHost}
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-white font-semibold text-base">
@@ -69,6 +81,11 @@ const ModePickerContent = ({
 
       <div className="mt-5 border-t border-purple-500/20 pt-4">
         <h4 className="text-sm font-semibold text-white">Кількість фільмів</h4>
+        {!isHost && (
+          <p className="mt-1 text-xs text-amber-400">
+            Тільки хост може змінювати кількість фільмів
+          </p>
+        )}
         <p className="mt-1 text-xs text-slate-400">
           Оберіть, скільки фільмів буде в раунді
         </p>
@@ -82,17 +99,22 @@ const ModePickerContent = ({
                 key={count}
                 type="button"
                 onClick={() => {
-                  onSelectMoviesCount(count);
-                  // Close modal only if a mode is already selected
-                  if (selectedMode) {
-                    onClose?.();
+                  if (isHost) {
+                    onSelectMoviesCount(count);
+                    // Close modal only if a mode is already selected
+                    if (selectedMode) {
+                      onClose?.();
+                    }
                   }
                 }}
                 className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
                   isSelected
                     ? "bg-purple-600/20 border-purple-400 text-white"
-                    : "bg-slate-900/50 border-purple-500/20 text-slate-300 hover:border-purple-400/60 hover:bg-slate-800/70"
+                    : isHost
+                      ? "bg-slate-900/50 border-purple-500/20 text-slate-300 hover:border-purple-400/60 hover:bg-slate-800/70"
+                      : "bg-slate-900/30 border-purple-500/10 text-slate-500 cursor-not-allowed opacity-50"
                 }`}
+                disabled={!isHost}
               >
                 {count}
               </button>

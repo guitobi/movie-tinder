@@ -10,6 +10,7 @@ import {
   resetGameState,
   setCurrentIndex,
 } from "../../store/slices/gameSlice";
+import { clearMoviesOnly } from "../../store/slices/roomSlice";
 import type { RootState } from "../../types/types";
 import { mapMovieToPanelData } from "../../utils/utils";
 import { useNavigate } from "react-router";
@@ -89,6 +90,8 @@ const GameView = ({ roomId }: GameViewProps) => {
 
     socket.emit("reset-round", { roomId });
     dispatch(setIsReady(false));
+    dispatch(resetGameState());
+    dispatch(clearMoviesOnly());
     navigate(`/rooms/${roomId}`);
   };
 
@@ -150,6 +153,15 @@ const GameView = ({ roomId }: GameViewProps) => {
           roomId={roomId}
           cardProgress={cardProgress}
           matchState={matchState}
+          onBackClick={() => {
+            if (roomId) {
+              // Notify server that user is leaving the game
+              socket.emit("leave-game", { roomId });
+            }
+            dispatch(clearMoviesOnly());
+            dispatch(resetGameState());
+            navigate(`/rooms/${roomId}`);
+          }}
         />
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">

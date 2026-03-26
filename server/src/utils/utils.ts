@@ -52,6 +52,11 @@ export async function fetchPopularMovies(
     if (selectedMode === "legendary-horror") {
       url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&language=en-US&with_genres=27&sort_by=popularity.desc&page=${randomPage}`;
     }
+    if (selectedMode === "new-releases") {
+      const currentYear = new Date().getFullYear();
+      const startDate = `${currentYear - 3}-01-01`;
+      url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&language=en-US&primary_release_date.gte=${startDate}&vote_count.gte=5&vote_average.gte=3.0&with_poster=true&with_backdrop=true&sort_by=popularity.desc&page=${randomPage}`;
+    }
 
     const res = await fetch(url, {
       method: "GET",

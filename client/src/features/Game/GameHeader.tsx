@@ -1,24 +1,29 @@
 import { ArrowLeft, Popcorn, Sparkles } from "lucide-react";
-import { Link } from "react-router";
 
 interface GameHeaderProps {
   roomId?: string;
   cardProgress: string;
   matchState: string;
+  onBackClick?: () => void;
 }
 
-const GameHeader = ({ roomId, cardProgress, matchState }: GameHeaderProps) => {
+const GameHeader = ({
+  roomId,
+  cardProgress,
+  matchState,
+  onBackClick,
+}: GameHeaderProps) => {
   return (
     <header className="movie-card p-3 sm:p-5 lg:p-6">
       <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-start gap-2.5 sm:gap-4">
-          <Link
-            to={roomId ? `/rooms/${roomId}` : "/"}
+          <button
+            onClick={onBackClick}
             className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/70 text-slate-200 transition-all hover:scale-105 hover:bg-slate-800 sm:mt-1 sm:h-11 sm:w-11 sm:rounded-2xl"
             aria-label="Назад до кімнати"
           >
             <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-          </Link>
+          </button>
 
           <div className="min-w-0">
             <div className="mb-1.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-pink-300/80 sm:mb-2 sm:gap-2 sm:text-sm sm:tracking-[0.35em]">

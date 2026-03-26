@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import {
   JoinRoomPayload,
   LeaveRoomPayload,
+  LeaveGamePayload,
   ResetRoundPayload,
   StartGamePayload,
   SwipeMoviePaload,
@@ -146,6 +147,19 @@ export const setupRoomHandlers = (io: Server) => {
     socket.on(
       "start-game",
       ({ roomId, selectedMode, numberOfMovies }: StartGamePayload) => {
+        const room = rooms.get(roomId);
+
+        if (!room) {
+          return;
+        }
+
+        const player = room.players[socket.id];
+
+        if (!player || !player.isHost) {
+          // Only allow host to start the game with specific settings
+          return;
+        }
+
         startGameHandler(roomId, selectedMode as any, numberOfMovies, io);
       },
     );
@@ -190,6 +204,21 @@ export const setupRoomHandlers = (io: Server) => {
         player.isReady = false;
         player.likes = [];
       }
+
+      io.to(roomId).emit("room-updated", room);
+    });
+
+    socket.on("leave-game", ({ roomId }: LeaveGamePayload) => {
+      const room = rooms.get(roomId);
+
+      if (!room) {
+        return;
+      }
+
+      // Clear movies for the room when a player leaves the game
+      // This prevents accumulation of movies when players repeatedly enter/exit game
+      room.movies = [];
+      room.likedMovies = {};
 
       io.to(roomId).emit("room-updated", room);
     });

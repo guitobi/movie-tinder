@@ -28,3 +28,7 @@ export interface SwipeMoviePaload {
   playerId: string;
   movieId: number;
 }
+
+export interface LeaveGamePayload {
+  roomId: string;
+}

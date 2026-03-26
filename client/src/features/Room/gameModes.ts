@@ -17,6 +17,14 @@ export const GAME_MODES: GameModeOption[] = [
     movieFeedHint: "У пріоритеті фільми жанру жахів",
     presetCode: "ROOM_MODE_LEGENDARY_HORROR",
   },
+  {
+    key: "new-releases",
+    title: "Новинки",
+    description: "Останні релізи та нові фільми для справжніх кіноманів.",
+    details: "Фокус на фільмах останніх 3 років",
+    movieFeedHint: "У пріоритеті нові випуски фільмів",
+    presetCode: "ROOM_MODE_NEW_RELEASES",
+  },
 ];
 
 export const getGameModeByKey = (modeKey: GameModeKey | null) => {

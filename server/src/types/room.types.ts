@@ -14,7 +14,7 @@ export interface Room {
   likedMovies: Record<number, string[]>;
 }
 
-export type selectedMode = "top-imdb" | "legendary-horror";
+export type selectedMode = "top-imdb" | "legendary-horror" | "new-releases";
 
 export interface Movie {
   adult: boolean;

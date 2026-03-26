@@ -344,6 +344,7 @@ const Room = () => {
           onSelectMoviesCount={(count) => {
             dispatch(setNumberOfMovies(count));
           }}
+          isHost={currentPlayer?.isHost ?? false}
         />
       </Modal.Window>
     </Modal>

@@ -305,7 +305,7 @@ const GameMoviePanel = ({
                 <p className="text-[10px] uppercase tracking-[0.2em] text-white/70 sm:text-xs sm:tracking-[0.4em]">
                   {eyebrow}
                 </p>
-                <h2 className="mt-2 text-2xl font-black leading-tight sm:mt-3 sm:text-4xl">
+                <h2 className="mt-2 text-2xl font-black leading-tight sm:mt-3 sm:text-4xl overflow-hidden text-ellipsis wrap-break-word">
                   {title}
                 </h2>
                 <p className="mt-2 text-xs text-white/80 sm:mt-3 sm:text-sm">

@@ -71,7 +71,7 @@ export const mapMovieToPanelData = (movie: Movie | undefined) => {
 
   const year = movie.release_date?.slice(0, 4) || "-";
   const language = movie.original_language?.toUpperCase() || "-";
-  const imagePath = movie.backdrop_path || movie.poster_path || "";
+  const imagePath = movie.backdrop_path || movie.poster_path;
   const imageUrl = imagePath
     ? `https://image.tmdb.org/t/p/w780${imagePath}`
     : null;
