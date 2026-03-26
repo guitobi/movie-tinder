@@ -50,28 +50,33 @@ const WinnerMovie = ({
       {isClosing ? (
         <Spinner fullscreen className="h-12 w-12 text-white" />
       ) : null}
-      <div className="movie-card w-full max-w-4xl overflow-hidden p-0 sm:max-h-[90vh]">
-        <div className="relative h-48 w-full sm:h-80">
+      <div className="movie-card w-full max-w-4xl overflow-y-auto max-h-[90vh] sm:max-h-[80vh] p-0">
+        <div
+          className="relative w-full"
+          style={{ paddingBottom: "56.25%" /* 16:9 aspect ratio */ }}
+        >
           {winnerMovie.backdrop_path || winnerMovie.poster_path ? (
             <img
               src={`https://image.tmdb.org/t/p/w780${winnerMovie.backdrop_path || winnerMovie.poster_path}`}
               alt={winnerMovie.title}
-              className="h-full w-full object-cover"
+              className="absolute top-0 left-0 h-full w-full object-cover"
             />
           ) : (
-            <div className="h-full w-full bg-linear-to-br from-pink-500/20 via-purple-500/20 to-slate-900" />
+            <div className="absolute top-0 left-0 h-full w-full bg-linear-to-br from-pink-500/20 via-purple-500/20 to-slate-900" />
           )}
           <div className="absolute inset-0 bg-black/55" />
-          <div className="hidden absolute inset-0 sm:flex sm:flex-col sm:justify-end sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-pink-200">
-              Match Found
-            </p>
-            <h2 className="mt-2 text-3xl font-black text-white sm:text-5xl">
-              {winnerMovie.title}
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-200 sm:text-base">
-              {winnerMovie.overview || "Гравці обрали цей фільм одноголосно."}
-            </p>
+          <div className="hidden absolute inset-0 sm:flex sm:flex-col sm:justify-between sm:p-8 h-full">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-pink-200">
+                Match Found
+              </p>
+              <h2 className="mt-2 text-3xl font-black text-white sm:text-5xl wrap-break-word">
+                {winnerMovie.title}
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-200 sm:text-base">
+                {winnerMovie.overview || "Гравці обрали цей фільм одноголосно."}
+              </p>
+            </div>
             <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-semibold text-white/90 sm:text-sm">
               <span className="rounded-full border border-white/30 bg-black/30 px-3 py-1">
                 ⭐ {winnerMovie.vote_average.toFixed(1)}
@@ -97,7 +102,7 @@ const WinnerMovie = ({
           <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-pink-200">
             Match Found
           </p>
-          <h2 className="text-2xl font-black text-white">
+          <h2 className="text-2xl font-black text-white wrap-break-word">
             {winnerMovie.title}
           </h2>
           <p className="text-sm leading-6 text-slate-200">

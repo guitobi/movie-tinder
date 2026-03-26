@@ -35,7 +35,10 @@ const ModePickerContent = ({
               key={mode.key}
               onClick={() => {
                 onSelectMode(mode.key);
-                onClose?.();
+                // Close modal only if a movie count is already selected
+                if (selectedMoviesCount > 0) {
+                  onClose?.();
+                }
               }}
               className={`w-full text-left rounded-xl border px-4 py-3 transition-all duration-200 ${
                 isSelected
@@ -78,7 +81,13 @@ const ModePickerContent = ({
               <button
                 key={count}
                 type="button"
-                onClick={() => onSelectMoviesCount(count)}
+                onClick={() => {
+                  onSelectMoviesCount(count);
+                  // Close modal only if a mode is already selected
+                  if (selectedMode) {
+                    onClose?.();
+                  }
+                }}
                 className={`rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200 ${
                   isSelected
                     ? "bg-purple-600/20 border-purple-400 text-white"

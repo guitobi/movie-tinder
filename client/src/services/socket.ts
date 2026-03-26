@@ -5,7 +5,8 @@ const socket = io(import.meta.env.VITE_SERVER_URL);
 
 export default socket;
 
-export const startGameHandler = (
+// Basic socket emit function for starting game
+export const emitStartGame = (
   roomId: string,
   gameModeKey: GameModeKey,
   numberOfMovies: number,

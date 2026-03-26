@@ -7,15 +7,17 @@ import {
   Link as LinkIcon,
   DoorOpen,
 } from "lucide-react";
+import Spinner from "../ui/Spinner";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import type { Room as RoomData, RootState } from "../types/types";
-import socket, { startGameHandler } from "../services/socket";
+import socket from "../services/socket";
 import {
   setGameModeKey,
   setNumberOfMovies,
   updateRoom,
+  setLoadingMovies,
 } from "../store/slices/roomSlice";
 import { setUsername as setUsernameAction } from "../store/slices/playerSlice";
 import { clearSessionStorage, getOrCreatePlayerToken } from "../utils/utils";
@@ -50,6 +52,9 @@ const Room = () => {
 
   const readyCount = players.filter((p) => p.isReady).length;
   const canStart = readyCount === players.length;
+  const isLoadingMovies = useSelector(
+    (state: RootState) => state.room.isLoadingMovies,
+  );
   const selectedModeOption = getGameModeByKey(selectedMode);
 
   const handleLeaveRoom = () => {
@@ -92,7 +97,15 @@ const Room = () => {
       return;
     }
 
-    startGameHandler(roomId, selectedMode, numberOfMovies);
+    // Set loading state to true when starting to fetch movies
+    dispatch(setLoadingMovies(true));
+
+    // Emit the start game event to the server
+    socket.emit("start-game", {
+      roomId,
+      selectedMode,
+      numberOfMovies,
+    });
   };
 
   useEffect(() => {
@@ -102,10 +115,16 @@ const Room = () => {
 
     const handleRoomUpdated = (room: RoomData) => {
       dispatch(updateRoom(room));
+
+      // Clear loading state if movies are now available
+      if (room.movies && room.movies.length > 0) {
+        dispatch(setLoadingMovies(false));
+      }
     };
 
     const handleStartingGame = (room: RoomData) => {
       dispatch(updateRoom(room));
+      dispatch(setLoadingMovies(false)); // Clear loading state when game starts
       navigate(`/rooms/${room.id}/game`);
     };
 
@@ -123,6 +142,13 @@ const Room = () => {
       socket.off("starting-game", handleStartingGame);
     };
   }, [roomId, username, dispatch, navigate]);
+
+  // Clean up loading state when unmounting
+  useEffect(() => {
+    return () => {
+      dispatch(setLoadingMovies(false));
+    };
+  }, [dispatch]);
 
   return (
     <Modal>
@@ -281,10 +307,18 @@ const Room = () => {
             </button>
             <button
               onClick={handleStartGame}
-              disabled={!canStart && currentPlayer?.isHost}
+              disabled={!canStart || isLoadingMovies}
               className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl px-4 sm:px-6 py-2.5 sm:py-4 transition-all duration-300 transform hover:scale-105 disabled:transform-none glow-effect-pink disabled:shadow-none flex items-center justify-center gap-2 text-sm sm:text-base"
             >
-              <Play /> Почати гру
+              {isLoadingMovies ? (
+                <>
+                  <Spinner className="h-5 w-5 mr-2" /> Завантаження фільмів...
+                </>
+              ) : (
+                <>
+                  <Play /> Почати гру
+                </>
+              )}
             </button>
           </div>
 

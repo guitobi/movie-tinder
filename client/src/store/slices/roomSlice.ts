@@ -9,6 +9,7 @@ interface RoomState {
   movies: Room["movies"];
   gameModeKey: GameModeKey | null;
   numberOfMovies: number;
+  isLoadingMovies: boolean;
 }
 
 const initialState: RoomState = {
@@ -17,6 +18,7 @@ const initialState: RoomState = {
   movies: [],
   gameModeKey: null,
   numberOfMovies: 0,
+  isLoadingMovies: false,
 };
 
 export const roomSlice = createSlice({
@@ -40,6 +42,9 @@ export const roomSlice = createSlice({
       state.players = action.payload.players;
       state.movies = action.payload.movies;
     },
+    setLoadingMovies(state, action: PayloadAction<boolean>) {
+      state.isLoadingMovies = action.payload;
+    },
   },
 });
 
@@ -49,6 +54,7 @@ export const {
   setGameModeKey,
   setNumberOfMovies,
   updateRoom,
+  setLoadingMovies,
 } = roomSlice.actions;
 
 export default roomSlice.reducer;

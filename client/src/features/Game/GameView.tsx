@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 import WinnerMovie from "./WinnerMovie";
 import { useGameSockets } from "../../hooks/useGameSockets";
 import { setIsReady } from "../../store/slices/playerSlice";
+import Spinner from "../../ui/Spinner";
 
 interface GameViewProps {
   roomId?: string;
@@ -30,6 +31,9 @@ const GameView = ({ roomId }: GameViewProps) => {
   const dispatch = useDispatch();
   const username = useSelector((state: RootState) => state.player.username);
   const room = useSelector((state: RootState) => state.room);
+  const isLoadingMovies = useSelector(
+    (state: RootState) => state.room.isLoadingMovies,
+  );
   const currentIndex = useSelector(
     (state: RootState) => state.game.currentIndex,
   );
@@ -109,7 +113,7 @@ const GameView = ({ roomId }: GameViewProps) => {
   };
 
   useEffect(() => {
-    if (!movies.length) {
+    if (!movies.length && !isLoadingMovies) {
       dispatch(resetGameState());
       return;
     }
@@ -117,7 +121,7 @@ const GameView = ({ roomId }: GameViewProps) => {
     if (currentIndex >= movies.length) {
       dispatch(setCurrentIndex(movies.length - 1));
     }
-  }, [currentIndex, dispatch, movies.length]);
+  }, [currentIndex, dispatch, movies.length, isLoadingMovies]);
 
   return (
     <div className="relative min-h-screen overflow-hidden px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
@@ -131,6 +135,15 @@ const GameView = ({ roomId }: GameViewProps) => {
         <div className="absolute top-24 right-0 h-80 w-80 rounded-full bg-purple-500/15 blur-3xl" />
         <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
       </div>
+
+      {isLoadingMovies && !movies.length && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm z-50">
+          <div className="text-center">
+            <Spinner className="h-12 w-12 text-purple-500 mx-auto animate-spin" />
+            <p className="text-white mt-4 text-lg">Завантаження фільмів...</p>
+          </div>
+        </div>
+      )}
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-4 sm:gap-6">
         <GameHeader
