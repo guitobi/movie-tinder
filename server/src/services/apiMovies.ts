@@ -1,9 +1,23 @@
 export const fetchMovies = async () => {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`,
-  );
-  const data = await res.json();
-  return data;
+  try {
+    if (!process.env.TMDB_API_KEY) {
+      throw new Error("TMDB_API_KEY is not set");
+    }
+
+    const res = await fetch(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`,
+    );
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch movies: ${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+    return null;
+  }
 };
 
 // Function to fetch additional movie details (runtime, cast, director, etc.)

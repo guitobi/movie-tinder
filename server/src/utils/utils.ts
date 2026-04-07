@@ -125,6 +125,9 @@ export async function fetchPopularMovies(
 
     const res = await fetch(url, {
       method: "GET",
+      headers: {
+        "Accept": "application/json",
+      },
     });
 
     if (!res.ok) {
@@ -168,6 +171,11 @@ export async function enhanceMovieWithDetails(movie: Movie): Promise<Movie> {
 
     const res = await fetch(
       `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${process.env.TMDB_API_KEY}&language=en-US&append_to_response=credits,videos,external_ids`,
+      {
+        headers: {
+          "Accept": "application/json",
+        },
+      }
     );
 
     if (!res.ok) {
@@ -211,6 +219,11 @@ export async function enhanceMovieWithDetails(movie: Movie): Promise<Movie> {
         const region = "US"; // Could be made configurable later
         const streamingRes = await fetch(
           `https://api.themoviedb.org/3/movie/${movie.id}/watch/providers?api_key=${process.env.TMDB_API_KEY}`,
+          {
+            headers: {
+              "Accept": "application/json",
+            },
+          }
         );
 
         if (streamingRes.ok) {
